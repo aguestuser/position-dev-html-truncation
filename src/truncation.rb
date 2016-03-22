@@ -1,3 +1,4 @@
+# coding: utf-8
 module Truncation
 
   ###########################################################
@@ -7,25 +8,31 @@ module Truncation
   #   are the only way I can export lambdas from a module!  #
   #                                                         #
   ###########################################################
+
+  SpaceOffset = 1
   
   # String -> [String]
   Tokenize = -> str { str.split }
 
   # [String] -> String
-  Detokenize = -> words { words.join(" ") }
+  Detokenize = -> words { MaybeSquish[words].join(" ") }
 
-  # (String, Int) -> String
-  MaybeTruncate = -> (str, len) { str.length >= len ? "#{str}..." : str }
+  # [String] -> String
+  MaybeSquish = lambda do |words|
+    words[-1] == "…" && words.length > 1 ? 
+      words[0..-3] + [words[-2..-1].join('')] :
+      words
+  end
 
   # ([String], Int) -> [String]
   TruncateTokens = lambda do |strs, len|
-    head, tail = [strs[0], strs[1..-1]]
-    if tail.nil?
+    hd, tl = [strs[0], strs[1..-1]]
+    if tl.nil?
       []
-    elsif len <= 0
-      [] + TruncateTokens[tail, len]
+    elsif hd.length > len
+      ["…"]
     else
-      [MaybeTruncate[head, len]] + TruncateTokens[tail, len - head.length]
+      [hd] + TruncateTokens[tl, len - (hd.length + SpaceOffset)]
     end
   end
 

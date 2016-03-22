@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'truncation'
 include Truncation
 
@@ -14,37 +15,37 @@ RSpec.describe 'Truncation module'  do
     end
 
     context 'string length is equal to target length' do
-      it 'appends elipsis to string' do 
-        Truncate[str, 10].should eq 'Eat the rich...'
+      it 'returns the string without mutating it' do 
+        Truncate[str, 12].should eq 'Eat the rich'
       end
     end
 
     context 'string length is greater than target length' do
       it 'truncates string and appends elipsis at word break' do
-        Truncate[str, 9].should eq 'Eat the rich...'
-        Truncate[str, 7].should eq 'Eat the rich...'
-        Truncate[str, 6].should eq 'Eat the...'
-        Truncate[str, 4].should eq 'Eat the...'
-        Truncate[str, 3].should eq 'Eat...'
-        Truncate[str, 1].should eq 'Eat...'
+        Truncate[str, 11].should eq 'Eat the…'
+        Truncate[str, 7].should eq 'Eat the…'
+        Truncate[str, 6].should eq 'Eat…'
+        Truncate[str, 3].should eq 'Eat…'
+        Truncate[str, 2].should eq '…'
+        Truncate[str, 1].should eq '…'
       end
     end
 
-    context 'string length is zero' do
+    context 'with empty string' do
       it 'returns an empty string'do
         Truncate['', 20].should eq ''
       end
     end
 
     context 'target length is zero' do
-      it 'returns an empty string'do
-        Truncate[str, 0].should eq ''
+      it 'returns an elipsis' do
+        Truncate[str, 0].should eq '…'
       end
     end
 
-    context 'both string and target length are zero' do
-      it 'returns an empty string'do
-        Truncate[str, 0].should eq ''
+    context 'empty string and target length is zero' do
+      it 'returns an elipsis' do
+        Truncate[str, 0].should eq '…'
       end
     end
   end
@@ -64,28 +65,49 @@ RSpec.describe 'Truncation module'  do
 
     describe '#Detokenize' do
 
-      it 'detokenizes an array of strings into a string' do
-        Detokenize[["Hello,", "world!"]].should eq "Hello, world!"
+      context 'with no elipsis tokens' do
+        it 'detokenizes an array of tokens into a string' do
+          Detokenize[["Hello,", "world"]].should eq "Hello, world"
+        end
       end
+
+      context 'with an elipsis token in final position' do
+        it 'concatenates last two tokens and detokenizes array of tokens into a string' do
+          Detokenize[["Hello,", "world", "…"]].should eq "Hello, world…"
+        end
+      end
+
     end
 
-    describe '#MaybeTruncate' do
+    describe '#MaybeSquish' do
 
-      context 'string is longer than target length' do
-        it 'appends an elipsis' do 
-          MaybeTruncate["hello", 4].should eq "hello..."
+      context 'token array of more than one element' do
+
+        context 'last token is `…`'  do
+          it 'concatenates last two tokens and returns array with one less element' do 
+            MaybeSquish[["hello", "world", "…"]].should eq ["hello", "world…"]
+          end
+        end
+
+        context 'last token in an array is not `…`'  do
+          it 'returns array identical to input' do 
+            MaybeSquish[["hello", "world"]].should eq ["hello", "world"]
+            MaybeSquish[["hello", "world", "!!!"]].should eq ["hello", "world", "!!!"]
+          end
         end
       end
 
-      context 'string is same length as target lenght' do
-        it 'appends an elipsis' do
-          MaybeTruncate["hello", 5].should eq "hello..."
+      context 'token array of only one element' do
+        context 'last token is `…`'  do
+          it 'concatenates last two tokens and returns array with one less element' do 
+            MaybeSquish[["…"]].should eq ["…"]
+          end
         end
-      end
 
-      context 'string is shorter than target length' do
-        it 'returns the string' do
-          MaybeTruncate["hello", 6].should eq "hello"
+        context 'last token in an array is not `…`'  do
+          it 'returns array identical to input' do 
+            MaybeSquish[["foo"]].should eq ["foo"]
+          end
         end
       end
     end
@@ -96,26 +118,27 @@ RSpec.describe 'Truncation module'  do
 
       describe 'happy path' do
 
-        context 'token lenghts sum to less than target length' do
+        context 'token lenghts and space offsets sum to less than target length' do
           it 'returns tokens without mutating them' do 
             TruncateTokens[tokens, 50].should eq tokens
           end
         end
 
-        context 'token lengths sum to target length' do
-          it 'appends elipsis to last token' do
-            TruncateTokens[tokens, 10].should eq ['Eat', 'the', 'rich...']
+        context 'token lengths and space offsets sum to target length' do
+          it 'returns tokens without mutating them' do
+            TruncateTokens[tokens, 12].should eq tokens
+            
           end
         end
 
-        context 'token lenghts sum to greater than target length' do
-          it 'appends elipsis to token at which sumation reaches target, discards remaining tokens' do
-            TruncateTokens[tokens, 9].should eq ['Eat', 'the', 'rich...']
-            TruncateTokens[tokens, 7].should eq ['Eat', 'the', 'rich...']
-            TruncateTokens[tokens, 6].should eq ['Eat', 'the...']
-            TruncateTokens[tokens, 4].should eq ['Eat', 'the...']
-            TruncateTokens[tokens, 3].should eq ['Eat...']
-            TruncateTokens[tokens, 1].should eq ['Eat...']
+        context 'token lenghts and space offsets sum to greater than target length' do
+          it 'replaces token at which sumation reaches target with elipsis, discards remaining tokens' do
+            TruncateTokens[tokens, 11].should eq ['Eat', 'the', '…']
+            TruncateTokens[tokens, 7].should eq ['Eat', 'the', '…']
+            TruncateTokens[tokens, 6].should eq ['Eat', '…']
+            TruncateTokens[tokens, 3].should eq ['Eat', '…']
+            TruncateTokens[tokens, 2].should eq ['…']
+            TruncateTokens[tokens, 0].should eq ['…']
           end
         end
       end
@@ -129,8 +152,14 @@ RSpec.describe 'Truncation module'  do
         end
         
         context 'target length is 0' do
-          it 'returns an empty array' do 
-            TruncateTokens[tokens, 0].should eq []
+          it 'returns an array with single elipsis token' do 
+            TruncateTokens[tokens, 0].should eq ['…']
+          end
+        end
+
+        context 'target length is 0 and tokens are empty array' do
+          it 'returns an array with single elipsis token' do 
+            TruncateTokens[tokens, 0].should eq ['…']
           end
         end
       end
