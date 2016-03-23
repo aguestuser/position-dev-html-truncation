@@ -1,9 +1,9 @@
 require 'tree'
 include Tree
 
-RSpec.describe 'Tree module', :focus do
+RSpec.describe Tree do
 
-  describe 'Leaf struct' do
+  describe Leaf do
 
     it 'has a value field' do
       Leaf.members.should eq [:value]
@@ -27,7 +27,7 @@ RSpec.describe 'Tree module', :focus do
     end
   end
 
-  describe 'Branch struct' do
+  describe Branch do
 
     it 'has label and children fields' do
       Branch.members.should eq [:label, :children]

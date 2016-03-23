@@ -27,12 +27,9 @@ module Truncation
   # ([String], Int) -> [String]
   TruncateTokens = lambda do |strs, len|
     hd, tl = [strs[0], strs[1..-1]]
-    if tl.nil?
-      []
-    elsif hd.length > len
-      ["…"]
-    else
-      [hd] + TruncateTokens[tl, len - (hd.length + SpaceOffset)]
+    if hd.nil? then []
+    elsif hd.length > len then ["…"]
+    else [hd] + TruncateTokens[tl, len - (hd.length + SpaceOffset)]
     end
   end
 

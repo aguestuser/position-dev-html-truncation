@@ -2,9 +2,9 @@
 require 'truncation'
 include Truncation
 
-RSpec.describe 'Truncation module'  do
+RSpec.describe Truncation do
 
-  describe '#Truncate' do
+  describe Truncate do
 
     str = 'Eat the rich'
     
@@ -52,7 +52,7 @@ RSpec.describe 'Truncation module'  do
 
   describe 'helper functions'do
 
-    describe '#Tokenize' do
+    describe Tokenize do
 
       it 'tokenizes a string into an array of strings' do
         Tokenize["Hi Austin"].should eq ["Hi", "Austin"]
@@ -63,7 +63,7 @@ RSpec.describe 'Truncation module'  do
       end
     end
 
-    describe '#Detokenize' do
+    describe Detokenize do
 
       context 'with no elipsis tokens' do
         it 'detokenizes an array of tokens into a string' do
@@ -79,7 +79,7 @@ RSpec.describe 'Truncation module'  do
 
     end
 
-    describe '#MaybeSquish' do
+    describe MaybeSquish do
 
       context 'token array of more than one element' do
 
@@ -112,7 +112,7 @@ RSpec.describe 'Truncation module'  do
       end
     end
 
-    describe '#TruncateTokens' do 
+    describe TruncateTokens do 
 
       tokens = ['Eat', 'the', 'rich']
 

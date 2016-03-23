@@ -1,7 +1,7 @@
 ['nokogiri_adapter', 'nokogiri', 'tree'].each(&method(:require))
 include NokogiriAdapter, Nokogiri, Nokogiri::HTML, Nokogiri::XML, Tree
 
-RSpec.describe 'Html module'  do
+RSpec.describe NokogiriAdapter do
 
   k_str = "You never <strong>did the <em>Kenosha</em> Kid</strong>."
   count_children = -> node { node.children.count }
@@ -10,31 +10,31 @@ RSpec.describe 'Html module'  do
 
     it 'parses an HTML string to an imperative Nokogiri tree that is difficult to reason about' do
       
-      doc = Nokogiri::HTML(k_str)
-      k_doc = Nokogiri::HTML::Builder.new { |d|
-        d.html {
-          d.body {
-            d.p {
-              d.text 'You never '
-              d.strong {
-                d.text 'did the '
-                d.em {
-                  d.text 'Kenosha'
+      doc1 = Nokogiri::HTML(k_str)
+      doc2 = Nokogiri::HTML::Builder.new { |doc|
+        doc.html {
+          doc.body {
+            doc.p {
+              doc.text 'You never '
+              doc.strong {
+                doc.text 'did the '
+                doc.em {
+                  doc.text 'Kenosha'
                 }
-                d.text ' Kid'
+                doc.text ' Kid'
               }
-              d.text '.'
+              doc.text '.'
             }
           }
         }
       }.doc
 
       # check this out...
-      doc.should_not eq k_doc
+      doc1.should_not eq doc2
       # ^-- sucks, huh? wouldn't testing for hash equality instead of object equality be nice?
       # instead we have to do this to place our tree under test...
       
-      roots = [k_doc, doc]
+      roots = [doc1, doc2]
       
       roots.map(&:class).should all ( eq HTML::Document )
       roots.map(&count_children).should all ( eq 2 )
@@ -107,7 +107,7 @@ RSpec.describe 'Html module'  do
     end
   end
 
-  describe '#ParseTree' do
+  describe ParseTree do
 
     declarative_tree = 
       Branch['p', [
@@ -127,7 +127,7 @@ RSpec.describe 'Html module'  do
 
     describe 'helpers' do
 
-      describe '#ParseBody' do
+      describe ParseBody do
 
         it 'extracts the body from a Nokogiri tree' do
           node = ParseBody[k_str]
@@ -139,7 +139,7 @@ RSpec.describe 'Html module'  do
         end
       end
 
-      describe '#ParseTreeFromNode' do
+      describe ParseTreeFromNode do
 
         it 'parses the contents of a Nokogiri `body` Element into a `Branch`' do
           ParseTreeFromNode[ParseBody[k_str]].should eq declarative_tree
