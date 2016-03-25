@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
-gem 'rspec', '~> 3.0'
 gem 'nokogiri'
+gem 'rspec', '~> 3.0'
 
 group :development do
   gem 'guard'
@@ -9,4 +9,9 @@ group :development do
   gem 'pry'
   gem 'pry-remote'
   gem 'pry-nav'
+end
+
+group :test do
+  
+  gem 'simplecov', require: false
 end

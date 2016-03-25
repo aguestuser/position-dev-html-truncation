@@ -1,6 +1,11 @@
 $: << './src'
 $: << './src/modules'
-require 'pry'
+[
+  'pry', 
+  'simplecov'
+].each(&method(:require))
+
+SimpleCov.start
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
