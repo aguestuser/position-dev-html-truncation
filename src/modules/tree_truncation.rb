@@ -3,8 +3,10 @@
 module TreeTruncation
   include Tree, StringTruncation
 
+  ## MAIN FUNCTIONS ##
+
   # (Either[Branch,Leaf], Int) ->  String
-  Truncate = lambda do |node, len|
+  TruncateTree = lambda do |node, len|
     IsLeaf[node] ?
       TruncateLeaf[node.value, len] :
       TruncateBranch[node, len]
@@ -29,9 +31,7 @@ module TreeTruncation
     }[0]
   end
   
-  #############################
-  ########## HELPERS ##########
-  #############################
+  ## HELPERS ##
 
   # Int -> Boolean
   Done = -> (len) { len <= 0 }
@@ -46,14 +46,14 @@ module TreeTruncation
       node.children.reduce(0){ |acc, child| acc + TextLen[child] }
   end
   
-  # NOTE(AG):
+  # NOTE:
   # * Calling `TextLen` on a Branch on line 43 blows up the Big O of this program.
   # * Before that call, it runs in O(m+n), where m is the number of HTML tags
   #   and n is the number of characters in the string.
   # * After the call, it runs in O(m^2+n) -- because for every m DOM nodes, we
-  #   have to traverse on the order of m DOM nodes to find the lenght of the
-  #   text it contains.
-  # * Can't really find a good way around this, as without this call, the running
+  #   have to traverse O(m) DOM nodes to find the length of the text it contains.
+  # * I can't really find a good way around this, as without this call, the running
   #   length of the reduction is discarded after a control flow passes from a recursive
-  #   call to `TruncateBranchContents` back to the containing call to the same fn
+  #   call to `TruncateBranchContents` back to the containing call to the same function
+  
 end
