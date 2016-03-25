@@ -7,47 +7,56 @@ RSpec.describe StringTruncation do
   describe 'main function' do
 
     describe "#TruncateStr" do
-
-      str = 'Eat the rich'
       
-      context 'string length is less than target length' do
-        it 'returns the string without mutating it' do
-          TruncateStr[str, 100].should eq 'Eat the rich'
+      context 'happy path' do
+        
+        str = 'Eat the rich'
+        
+        context 'string length is less than character limit' do
+          it 'returns the string without mutating it' do
+            TruncateStr[str, 13].should eq 'Eat the rich'
+          end
+        end
+
+        context 'string length is equal to character limit' do
+          it 'truncates the last word of the string' do 
+            TruncateStr[str, 12].should eq 'Eat the…'
+          end
+        end
+
+        context 'string length is greater than character limit' do
+          it 'truncates string and appends elipsis at last word break before limit reached' do
+
+            TruncateStr[str, 1].should eq '…'
+            TruncateStr[str, 3].should eq '…'
+
+            TruncateStr[str, 4].should eq 'Eat…'
+            TruncateStr[str, 7].should eq 'Eat…'
+
+            TruncateStr[str, 8].should eq 'Eat the…'
+            TruncateStr[str, 11].should eq 'Eat the…'
+          end
         end
       end
 
-      context 'string length is equal to target length' do
-        it 'returns the string without mutating it' do 
-          TruncateStr[str, 12].should eq 'Eat the rich'
-        end
-      end
+      context 'corner cases' do
 
-      context 'string length is greater than target length' do
-        it 'truncates string and appends elipsis at word break' do
-          TruncateStr[str, 11].should eq 'Eat the…'
-          TruncateStr[str, 7].should eq 'Eat the…'
-          TruncateStr[str, 6].should eq 'Eat…'
-          TruncateStr[str, 3].should eq 'Eat…'
-          TruncateStr[str, 2].should eq '…'
-          TruncateStr[str, 1].should eq '…'
+        context 'empty string' do
+          it 'returns an empty string'do
+            TruncateStr['', 20].should eq ''
+          end
         end
-      end
 
-      context 'with empty string' do
-        it 'returns an empty string'do
-          TruncateStr['', 20].should eq ''
+        context 'target length is zero' do
+          it 'returns an elipsis' do
+            TruncateStr['foobar', 0].should eq '…'
+          end
         end
-      end
 
-      context 'target length is zero' do
-        it 'returns an elipsis' do
-          TruncateStr[str, 0].should eq '…'
-        end
-      end
-
-      context 'empty string and target length is zero' do
-        it 'returns an elipsis' do
-          TruncateStr[str, 0].should eq '…'
+        context 'empty string and target length is zero' do
+          it 'returns an empty string' do
+            TruncateStr['', 0].should eq ''
+          end
         end
       end
     end
@@ -120,27 +129,28 @@ RSpec.describe StringTruncation do
 
       describe 'happy path' do
 
-        context 'token lenghts and space offsets sum to less than target length' do
+        context 'token lenghts and space offsets sum to less than limit' do
           it 'returns tokens without mutating them' do 
-            TruncateTokens[tokens, 50].should eq tokens
+            TruncateTokens[tokens, 13].should eq tokens
           end
         end
 
-        context 'token lengths and space offsets sum to target length' do
-          it 'returns tokens without mutating them' do
-            TruncateTokens[tokens, 12].should eq tokens
-            
+        context 'token lengths and space offsets sum to limit' do
+          it 'replaces last token with elipsis' do
+            TruncateTokens[tokens, 12].should eq ['Eat', 'the', '…']
           end
         end
 
-        context 'token lenghts and space offsets sum to greater than target length' do
-          it 'replaces token at which sumation reaches target with elipsis, discards remaining tokens' do
-            TruncateTokens[tokens, 11].should eq ['Eat', 'the', '…']
-            TruncateTokens[tokens, 7].should eq ['Eat', 'the', '…']
-            TruncateTokens[tokens, 6].should eq ['Eat', '…']
-            TruncateTokens[tokens, 3].should eq ['Eat', '…']
-            TruncateTokens[tokens, 2].should eq ['…']
+        context 'token lenghts and space offsets sum to greater than limit' do
+          it 'replaces token at which sumation reaches limit with elipsis, discards remaining tokens' do
             TruncateTokens[tokens, 0].should eq ['…']
+            TruncateTokens[tokens, 3].should eq ['…']
+
+            TruncateTokens[tokens, 4].should eq ['Eat', '…']
+            TruncateTokens[tokens, 7].should eq ['Eat', '…']
+
+            TruncateTokens[tokens, 8].should eq ['Eat', 'the', '…']
+            TruncateTokens[tokens, 12].should eq ['Eat', 'the', '…']
           end
         end
       end

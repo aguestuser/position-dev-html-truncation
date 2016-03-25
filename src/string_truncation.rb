@@ -20,7 +20,7 @@ module StringTruncation
   TruncateTokens = lambda do |strs, len|
     hd, tl = [strs[0], strs[1..-1]]
     if hd.nil? then []
-    elsif hd.length > len then ["…"]
+    elsif hd.length >= len then ["…"]
     else [hd] + TruncateTokens[tl, len - (hd.length + SpaceOffset)]
     end
   end
