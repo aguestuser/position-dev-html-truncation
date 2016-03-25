@@ -3,13 +3,6 @@
 module TreeTruncation
   include Tree, StringTruncation
 
-  # Either[Leaf, Branch] -> String
-  Render = lambda do |node|
-    IsLeaf[node] ?
-      node.value :
-      "<#{node.label}>" + node.children.map(&Render).join('') + "</#{node.label}>"
-  end
-
   # (Either[Branch,Leaf], Int) ->  String
   Truncate = lambda do |node, len|
     IsLeaf[node] ?

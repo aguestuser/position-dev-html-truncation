@@ -4,23 +4,7 @@ include TreeTruncation
 
 RSpec.describe TreeTruncation do
 
-  describe'main functions' do
-
-    describe '#Render' do
-      t1 = 
-        Branch['p', [
-          Leaf['You never '],
-          Branch['strong', [
-            Leaf['did the '],
-            Branch['em', [
-              Leaf['Kenosha']]],
-            Leaf[' Kid']]],
-          Leaf['.']]]
-
-      it 'renders a Tree into an html string' do
-        Render[t1].should eq "<p>You never <strong>did the <em>Kenosha</em> Kid</strong>.</p>"
-      end
-    end
+  describe'main function' do
 
     describe '#Truncate' do
 
