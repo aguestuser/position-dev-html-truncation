@@ -1,58 +1,61 @@
 # coding: utf-8
-require 'truncation'
-include Truncation
+require 'string_truncation'
+include StringTruncation
 
-RSpec.describe Truncation do
+RSpec.describe StringTruncation do
 
-  describe Truncate do
+  describe 'main function' do
 
-    str = 'Eat the rich'
-    
-    context 'string length is less than target length' do
-      it 'returns the string without mutating it' do
-        Truncate[str, 100].should eq 'Eat the rich'
+    describe "#TruncateStr" do
+
+      str = 'Eat the rich'
+      
+      context 'string length is less than target length' do
+        it 'returns the string without mutating it' do
+          TruncateStr[str, 100].should eq 'Eat the rich'
+        end
       end
-    end
 
-    context 'string length is equal to target length' do
-      it 'returns the string without mutating it' do 
-        Truncate[str, 12].should eq 'Eat the rich'
+      context 'string length is equal to target length' do
+        it 'returns the string without mutating it' do 
+          TruncateStr[str, 12].should eq 'Eat the rich'
+        end
       end
-    end
 
-    context 'string length is greater than target length' do
-      it 'truncates string and appends elipsis at word break' do
-        Truncate[str, 11].should eq 'Eat the…'
-        Truncate[str, 7].should eq 'Eat the…'
-        Truncate[str, 6].should eq 'Eat…'
-        Truncate[str, 3].should eq 'Eat…'
-        Truncate[str, 2].should eq '…'
-        Truncate[str, 1].should eq '…'
+      context 'string length is greater than target length' do
+        it 'truncates string and appends elipsis at word break' do
+          TruncateStr[str, 11].should eq 'Eat the…'
+          TruncateStr[str, 7].should eq 'Eat the…'
+          TruncateStr[str, 6].should eq 'Eat…'
+          TruncateStr[str, 3].should eq 'Eat…'
+          TruncateStr[str, 2].should eq '…'
+          TruncateStr[str, 1].should eq '…'
+        end
       end
-    end
 
-    context 'with empty string' do
-      it 'returns an empty string'do
-        Truncate['', 20].should eq ''
+      context 'with empty string' do
+        it 'returns an empty string'do
+          TruncateStr['', 20].should eq ''
+        end
       end
-    end
 
-    context 'target length is zero' do
-      it 'returns an elipsis' do
-        Truncate[str, 0].should eq '…'
+      context 'target length is zero' do
+        it 'returns an elipsis' do
+          TruncateStr[str, 0].should eq '…'
+        end
       end
-    end
 
-    context 'empty string and target length is zero' do
-      it 'returns an elipsis' do
-        Truncate[str, 0].should eq '…'
+      context 'empty string and target length is zero' do
+        it 'returns an elipsis' do
+          TruncateStr[str, 0].should eq '…'
+        end
       end
     end
   end
 
   describe 'helper functions'do
 
-    describe Tokenize do
+    describe '#Tokenize' do
 
       it 'tokenizes a string into an array of strings' do
         Tokenize["Hi Austin"].should eq ["Hi", "Austin"]
@@ -63,7 +66,7 @@ RSpec.describe Truncation do
       end
     end
 
-    describe Detokenize do
+    describe '#Detokenize' do
 
       context 'with no elipsis tokens' do
         it 'detokenizes an array of tokens into a string' do
@@ -76,10 +79,9 @@ RSpec.describe Truncation do
           Detokenize[["Hello,", "world", "…"]].should eq "Hello, world…"
         end
       end
-
     end
 
-    describe MaybeSquish do
+    describe '#MaybeSquish' do
 
       context 'token array of more than one element' do
 
@@ -112,7 +114,7 @@ RSpec.describe Truncation do
       end
     end
 
-    describe TruncateTokens do 
+    describe '#TruncateTokens' do 
 
       tokens = ['Eat', 'the', 'rich']
 

@@ -1,13 +1,5 @@
 # coding: utf-8
-module Truncation
-
-  ###########################################################
-  #                                                         #
-  # TODO:                                                   #
-  #   ask a True Rubyist why CapitalizedConstants           #
-  #   are the only way I can export lambdas from a module!  #
-  #                                                         #
-  ###########################################################
+module StringTruncation
 
   SpaceOffset = 1
   
@@ -34,6 +26,6 @@ module Truncation
   end
 
   # String -> String
-  Truncate = -> (str, len) { Detokenize[TruncateTokens[Tokenize[str], len]] }
+  TruncateStr = -> (str, len) { Detokenize[TruncateTokens[Tokenize[str], len]] }
 
 end

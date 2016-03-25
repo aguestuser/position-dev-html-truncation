@@ -107,7 +107,7 @@ RSpec.describe NokogiriAdapter do
     end
   end
 
-  describe ParseTree do
+  describe '#ParseTree' do
 
     declarative_tree = 
       Branch['p', [
@@ -127,7 +127,7 @@ RSpec.describe NokogiriAdapter do
 
     describe 'helpers' do
 
-      describe ParseBody do
+      describe '#ParseBody' do
 
         it 'extracts the body from a Nokogiri tree' do
           node = ParseBody[k_str]
@@ -139,7 +139,7 @@ RSpec.describe NokogiriAdapter do
         end
       end
 
-      describe ParseTreeFromNode do
+      describe '#ParseTreeFromNode' do
 
         it 'parses the contents of a Nokogiri `body` Element into a `Branch`' do
           ParseTreeFromNode[ParseBody[k_str]].should eq declarative_tree
