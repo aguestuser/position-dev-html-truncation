@@ -41,20 +41,20 @@ RSpec.describe TreeTruncation do
 
           it 'truncates the tree at the last word break before the limit' do
             
-            TruncateTree[tree, 1].should eq "<p>…</p>" # 
-            TruncateTree[tree, 3].should eq "<p>…</p>"
+            TruncateTree[tree, 1].should eq "…"
+            TruncateTree[tree, 3].should eq "…"
 
             TruncateTree[tree, 4].should eq "<p>You…</p>"
             TruncateTree[tree, 9].should eq "<p>You…</p>"
 
-            TruncateTree[tree, 10].should eq "<p>You never<strong>…</strong></p>"
-            TruncateTree[tree, 12].should eq "<p>You never<strong>…</strong></p>" 
+            TruncateTree[tree, 10].should eq "<p>You never…</p>"
+            TruncateTree[tree, 12].should eq "<p>You never…</p>" 
 
             TruncateTree[tree, 13].should eq "<p>You never<strong>did…</strong></p>"
             TruncateTree[tree, 16].should eq "<p>You never<strong>did…</strong></p>"
 
-            TruncateTree[tree, 17].should eq "<p>You never<strong>did the<em>…</em></strong></p>"
-            TruncateTree[tree, 23].should eq "<p>You never<strong>did the<em>…</em></strong></p>"
+            TruncateTree[tree, 17].should eq "<p>You never<strong>did the…</strong></p>"
+            TruncateTree[tree, 23].should eq "<p>You never<strong>did the…</strong></p>"
 
             TruncateTree[tree, 24].should eq "<p>You never<strong>did the<em>Kenosha</em>…</strong></p>"
             TruncateTree[tree, 26].should eq "<p>You never<strong>did the<em>Kenosha</em>…</strong></p>"
@@ -94,22 +94,22 @@ RSpec.describe TreeTruncation do
 
           it 'truncates the tree at the last word break before the limit' do
             
-            TruncateTree[tree, 1].should eq "<p>…</p>"
-            TruncateTree[tree, 3].should eq "<p>…</p>"
+            TruncateTree[tree, 1].should eq "…"
+            TruncateTree[tree, 3].should eq "…"
 
             TruncateTree[tree, 4].should eq "<p>You…</p>"
             TruncateTree[tree, 9].should eq "<p>You…</p>"
 
-            TruncateTree[tree, 10].should eq "<p>You never<strong>…</strong></p>"
-            TruncateTree[tree, 12].should eq "<p>You never<strong>…</strong></p>" 
+            TruncateTree[tree, 10].should eq "<p>You never…</p>"
+            TruncateTree[tree, 12].should eq "<p>You never…</p>" 
 
             TruncateTree[tree, 14].should eq "<p>You never<strong> did…</strong></p>"
             TruncateTree[tree, 17].should eq "<p>You never<strong> did…</strong></p>"
 
             TruncateTree[tree, 18].should eq "<p>You never<strong> did the…</strong></p>"
             
-            TruncateTree[tree, 19].should eq "<p>You never<strong> did the <em>…</em></strong></p>"
-            TruncateTree[tree, 26].should eq "<p>You never<strong> did the <em>…</em></strong></p>"
+            TruncateTree[tree, 19].should eq "<p>You never<strong> did the …</strong></p>"
+            TruncateTree[tree, 26].should eq "<p>You never<strong> did the …</strong></p>"
 
             TruncateTree[tree, 27].should eq "<p>You never<strong> did the <em> Kenosha</em>…</strong></p>"
             TruncateTree[tree, 29].should eq "<p>You never<strong> did the <em> Kenosha</em>…</strong></p>"

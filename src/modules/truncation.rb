@@ -13,6 +13,6 @@ module Truncation
   # String -> String
   Format = lambda do |str|
     str_ = str[0..2] == '<p>' ? str[3..-1] : str
-    str_.chomp('</p>')
+    str_.chomp('</p>').sub(' …', '…')
   end
 end

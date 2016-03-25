@@ -1,3 +1,4 @@
+# coding: utf-8
 ['tree', 'string_truncation'].each(&method(:require))
 
 module TreeTruncation
@@ -19,8 +20,11 @@ module TreeTruncation
 
   # (Branch, Int) -> String
   TruncateBranch = lambda do |br, len|
-    Done[len] ? '' : "<#{br.label}>" + TruncateBranchContents[br, len] + "</#{br.label}>"
+    Done[len] ? '' : MaybeWrap[TruncateBranchContents[br, len], br.label]
   end
+
+  # String -> String
+  MaybeWrap = -> (str, tag) { str ==  '…' ? '…' : "<#{tag}>#{str}</#{tag}>" }
 
   # (Branch, Int) -> String
   TruncateBranchContents = lambda do |br, len|
