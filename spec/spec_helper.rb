@@ -1,4 +1,5 @@
 $: << './src'
+$: << './src/modules'
 require 'pry'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
