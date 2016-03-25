@@ -8,68 +8,121 @@ RSpec.describe TreeTruncation do
 
     describe '#Truncate' do
 
-      t2 = 
-        Branch['p', [
-          Leaf['You never'],
-          Branch['strong', [
-            Leaf['did the'],
-            Branch['em', [
-              Leaf['Kenosha']]],
-            Leaf['Kid']]],
-          Leaf['.']]]
+      context 'no leading or trailing spaces' do
+        tree = 
+          Branch['p', [
+            Leaf['You never'],
+            Branch['strong', [
+              Leaf['did the'],
+              Branch['em', [
+                Leaf['Kenosha']]],
+              Leaf['Kid']]],
+            Leaf['.']]]
 
-    
-      # TODO:
-      # * fix whitespace
-      #   * this currenly only works for html w/ no white space at beginning or end of tokens!!!
-      #   * requires modification of Truncation::Tokenize/Detokenize to work properly
-      # * off-by one errors (see tests)
+        context 'tree contains less characters than the limit' do
+          it 'does not mutate the tree' do
+            Truncate[tree, 28].should eq "<p>You never<strong>did the<em>Kenosha</em>Kid</strong>.</p>"
+          end
+        end
 
-      context 'tree contains less characters than the limit' do
-        it 'does not mutate the tree' do
-          Truncate[t2, 28].should eq "<p>You never<strong>did the<em>Kenosha</em>Kid</strong>.</p>"
+        context 'tree contains an equal number of characters as the limit' do
+          it 'truncates the last word in the tree' do
+            Truncate[tree, 27].should eq "<p>You never<strong>did the<em>Kenosha</em>Kid</strong>…</p>"
+          end
+        end
+
+        context 'character limit is 0' do
+          it 'returns an empty string'do
+            Truncate[tree, 0].should eq ''
+          end
+        end
+
+        context 'characters in tree reach or exceed limit' do
+
+          it 'truncates the tree at the last word break before the limit' do
+            
+            Truncate[tree, 1].should eq "<p>…</p>" # 
+            Truncate[tree, 3].should eq "<p>…</p>"
+
+            Truncate[tree, 4].should eq "<p>You…</p>"
+            Truncate[tree, 9].should eq "<p>You…</p>"
+
+            Truncate[tree, 10].should eq "<p>You never<strong>…</strong></p>"
+            Truncate[tree, 12].should eq "<p>You never<strong>…</strong></p>" 
+
+            Truncate[tree, 13].should eq "<p>You never<strong>did…</strong></p>"
+            Truncate[tree, 16].should eq "<p>You never<strong>did…</strong></p>"
+
+            Truncate[tree, 17].should eq "<p>You never<strong>did the<em>…</em></strong></p>"
+            Truncate[tree, 23].should eq "<p>You never<strong>did the<em>…</em></strong></p>"
+
+            Truncate[tree, 24].should eq "<p>You never<strong>did the<em>Kenosha</em>…</strong></p>"
+            Truncate[tree, 26].should eq "<p>You never<strong>did the<em>Kenosha</em>…</strong></p>"
+
+            Truncate[tree, 27].should eq "<p>You never<strong>did the<em>Kenosha</em>Kid</strong>…</p>"
+          end
         end
       end
 
-      context 'tree contains an equal number of characters as the limit' do
-        it 'truncates the last word in the tree' do
-          Truncate[t2, 27].should eq "<p>You never<strong>did the<em>Kenosha</em>Kid</strong>…</p>"
+
+      context 'leading and trailing spaces' do
+        tree = 
+          Branch['p', [
+            Leaf['You never'],
+            Branch['strong', [
+              Leaf[' did the '],
+              Branch['em', [
+                Leaf[' Kenosha']]],
+              Leaf['Kid']]],
+            Leaf['. ']]]
+
+        context 'tree contains less characters than the limit' do
+          it 'does not mutate the tree' do
+            Truncate[tree, 32].should(
+              eq("<p>You never<strong> did the <em> Kenosha</em>Kid</strong>. </p>"))
+          end
         end
-      end
 
-      context 'character limit is 0' do
-        it 'returns an empty string'do
-          Truncate[t2, 0].should eq ''
+        context 'tree contains an equal number of characters as the limit' do
+          it 'truncates the last word in the tree' do
+            Truncate[tree, 31].should(
+              eq("<p>You never<strong> did the <em> Kenosha</em>Kid</strong>.…</p>"))
+          end
         end
-      end
 
-      context 'tree contains more characters than the limit' do
+        context 'characters in tree reach or exceed limit' do
 
-        it 'truncates the tree at the last word break before the limit' do
-          
-          Truncate[t2, 1].should eq "<p>…</p>" # 
-          Truncate[t2, 3].should eq "<p>…</p>"
+          it 'truncates the tree at the last word break before the limit' do
+            
+            Truncate[tree, 1].should eq "<p>…</p>"
+            Truncate[tree, 3].should eq "<p>…</p>"
 
-          Truncate[t2, 4].should eq "<p>You…</p>"
-          Truncate[t2, 9].should eq "<p>You…</p>"
+            Truncate[tree, 4].should eq "<p>You…</p>"
+            Truncate[tree, 9].should eq "<p>You…</p>"
 
-          Truncate[t2, 10].should eq "<p>You never<strong>…</strong></p>"
-          Truncate[t2, 12].should eq "<p>You never<strong>…</strong></p>" 
+            Truncate[tree, 10].should eq "<p>You never<strong>…</strong></p>"
+            Truncate[tree, 12].should eq "<p>You never<strong>…</strong></p>" 
 
-          Truncate[t2, 13].should eq "<p>You never<strong>did…</strong></p>"
-          Truncate[t2, 16].should eq "<p>You never<strong>did…</strong></p>"
+            Truncate[tree, 14].should eq "<p>You never<strong> did…</strong></p>"
+            Truncate[tree, 17].should eq "<p>You never<strong> did…</strong></p>"
 
-          Truncate[t2, 17].should eq "<p>You never<strong>did the<em>…</em></strong></p>"
-          Truncate[t2, 23].should eq "<p>You never<strong>did the<em>…</em></strong></p>"
+            Truncate[tree, 18].should eq "<p>You never<strong> did the…</strong></p>"
+            
+            Truncate[tree, 19].should eq "<p>You never<strong> did the <em>…</em></strong></p>"
+            Truncate[tree, 26].should eq "<p>You never<strong> did the <em>…</em></strong></p>"
 
-          Truncate[t2, 24].should eq "<p>You never<strong>did the<em>Kenosha</em>…</strong></p>"
-          Truncate[t2, 26].should eq "<p>You never<strong>did the<em>Kenosha</em>…</strong></p>"
+            Truncate[tree, 27].should eq "<p>You never<strong> did the <em> Kenosha</em>…</strong></p>"
+            Truncate[tree, 29].should eq "<p>You never<strong> did the <em> Kenosha</em>…</strong></p>"
 
-          Truncate[t2, 27].should eq "<p>You never<strong>did the<em>Kenosha</em>Kid</strong>…</p>"
+            Truncate[tree, 30].should eq "<p>You never<strong> did the <em> Kenosha</em>Kid</strong>…</p>"
+
+            Truncate[tree, 31].should eq "<p>You never<strong> did the <em> Kenosha</em>Kid</strong>.…</p>"
+          end
         end
       end
     end
   end
+  
   describe 'helpers' do
 
     describe '#Done' do
