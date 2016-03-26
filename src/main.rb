@@ -6,6 +6,6 @@ class Main
   include Truncation
 
   # () -> ()
-  Run = -> () { puts(Truncate[Str, Len])}[]
+  Run = -> () { puts(Truncate[*ARGV[0..1]])}[]
 
 end
