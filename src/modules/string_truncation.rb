@@ -20,12 +20,12 @@ module StringTruncation
   # String -> [String]
   Tokenize = -> str { str.split }
 
-  # ([String], String) -> [String]
+  # ([String], String) -> [[String], String]
   OffsetSpaces = lambda do |tokens, str|
     OffsetTrailingSpace[*OffsetLeadingSpace[tokens, str]].first
   end
   
-  # ([String], String) -> [String]
+  # ([String], String) -> [[String], String]
   OffsetLeadingSpace = lambda do |tokens, str|
     str[0] == ' ' ? 
       [[''] + tokens, str] :

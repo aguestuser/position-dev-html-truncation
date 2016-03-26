@@ -14,7 +14,7 @@
       <img src="./assets/0.10.0/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2016-03-25T06:44:02-04:00">2016-03-25T06:44:02-04:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2016-03-26T00:57:29-04:00">2016-03-26T00:57:29-04:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -4905,7 +4905,7 @@
         <li class="never" data-hits="" data-linenumber="23">
           
           
-          <code class="ruby">  # ([String], String) -&gt; [String]</code>
+          <code class="ruby">  # ([String], String) -&gt; [[String], String]</code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="24">
@@ -4935,7 +4935,7 @@
         <li class="never" data-hits="" data-linenumber="28">
           
           
-          <code class="ruby">  # ([String], String) -&gt; [String]</code>
+          <code class="ruby">  # ([String], String) -&gt; [[String], String]</code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="29">
@@ -5415,13 +5415,13 @@
         <li class="covered" data-hits="110" data-linenumber="31">
           <span class="hits">110</span>
           
-          <code class="ruby">    br.children.reduce([&#39;&#39;, len]){ |acc_, child|</code>
+          <code class="ruby">    br.children.reduce([&#39;&#39;, len]){ |acc, child|</code>
         </li>
       
         <li class="covered" data-hits="279" data-linenumber="32">
           <span class="hits">279</span>
           
-          <code class="ruby">      str, len_ = acc_</code>
+          <code class="ruby">      str, len_ = acc</code>
         </li>
       
         <li class="covered" data-hits="279" data-linenumber="33">
@@ -5553,13 +5553,13 @@
         <li class="never" data-hits="" data-linenumber="54">
           
           
-          <code class="ruby">  # * Calling `TextLen` on a Branch on line 43 blows up the Big O of this program.</code>
+          <code class="ruby">  # * Calling `TextLen` on a Branch on line 34 blows up the Big O of this program.</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="55">
           
           
-          <code class="ruby">  # * Before that call, it runs in O(m+n), where m is the number of HTML tags</code>
+          <code class="ruby">  # * Before that call, (I think?) it runs in O(m+n), where m is the number of HTML tags</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="56">

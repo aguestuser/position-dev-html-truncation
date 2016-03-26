@@ -28,8 +28,8 @@ module TreeTruncation
 
   # (Branch, Int) -> String
   TruncateBranchContents = lambda do |br, len|
-    br.children.reduce(['', len]){ |acc_, child|
-      str, len_ = acc_
+    br.children.reduce(['', len]){ |acc, child|
+      str, len_ = acc
       trunc = IsLeaf[child] ? TruncateLeaf : TruncateBranch
       [ str + trunc[ child, len_ ], len_ - TextLen[child] ]
     }[0]
@@ -51,8 +51,8 @@ module TreeTruncation
   end
   
   # NOTE:
-  # * Calling `TextLen` on a Branch on line 43 blows up the Big O of this program.
-  # * Before that call, it runs in O(m+n), where m is the number of HTML tags
+  # * Calling `TextLen` on a Branch on line 34 blows up the Big O of this program.
+  # * Before that call, (I think?) it runs in O(m+n), where m is the number of HTML tags
   #   and n is the number of characters in the string.
   # * After the call, it runs in O(m^2+n) -- because for every m DOM nodes, we
   #   have to traverse O(m) DOM nodes to find the length of the text it contains.
